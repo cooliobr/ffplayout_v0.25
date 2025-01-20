@@ -266,7 +266,7 @@ fn scale(
                     &[&config.processing.width, &config.processing.height],
                 ),
                 None => format!(
-                    "scale_npp=format=yuv420p,scale_npp={}:{}:interp_algo=super:force_original_aspect_ratio=decrease,hwdownload,pad={}:{}:(ow-iw)/2:(oh-ih)/2:color=black,setdar=16:9,setsar=1:1",
+                    "scale_npp=format=yuv420p,scale_npp={}:{}:interp_algo=super:force_original_aspect_ratio=decrease,hwdownload,pad={}:{}:(ow-iw)/2:(oh-ih)/2:color=black,setdar=16:9,setsar=1:1,hwupload",
                     config.processing.width, config.processing.height, config.processing.width, config.processing.height
                 ),
             };
@@ -274,7 +274,7 @@ fn scale(
             chain.add_filter(&scale, 0, Video);
         } else {
             //chain.add_filter(&scale, 0, Video);
-            chain.add_filter("scale_npp=format=yuv420p,scale_npp=1280:720:interp_algo=super:force_original_aspect_ratio=decrease,hwdownload,pad=1280:720:(ow-iw)/2:(oh-ih)/2:color=black,setdar=16:9,setsar=1:1", 0, Video);
+            chain.add_filter("scale_npp=format=yuv420p,scale_npp=1280:720:interp_algo=super:force_original_aspect_ratio=decrease,hwdownload,pad=1280:720:(ow-iw)/2:(oh-ih)/2:color=black,setdar=16:9,setsar=1:1,hwupload", 0, Video);
         }
 
         if !is_close(aspect, config.processing.aspect, 0.03) {
@@ -292,7 +292,7 @@ fn scale(
                 &[&config.processing.width, &config.processing.height],
             ),
             None => format!(
-                "scale_npp=format=yuv420p,scale_npp={}:{}:interp_algo=super:force_original_aspect_ratio=decrease,hwdownload,pad={}:{}:(ow-iw)/2:(oh-ih)/2:color=black,setdar=16:9,setsar=1:1",
+                "scale_npp=format=yuv420p,scale_npp={}:{}:interp_algo=super:force_original_aspect_ratio=decrease,hwdownload,pad={}:{}:(ow-iw)/2:(oh-ih)/2:color=black,setdar=16:9,setsar=1:1,hwupload",
                 config.processing.width, config.processing.height, config.processing.width, config.processing.height
             ),
         };
@@ -367,7 +367,7 @@ fn overlay(node: &mut Media, chain: &mut Filters, config: &PlayoutConfig) {
                 .replace(':', "\\\\:"),
             config.processing.logo_opacity.to_string()]),
             None => format!(
-                "hwupload[v];movie={}[l0];[l0]format=rgba,colorchannelmixer=aa={}",
+                "[v];movie={}[l0];[l0]format=rgba,colorchannelmixer=aa={}",
                 config
                     .processing
                     .logo_path
