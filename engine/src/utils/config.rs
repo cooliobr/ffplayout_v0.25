@@ -673,24 +673,18 @@ impl PlayoutConfig {
             let buff_size = format!("{}k", (processing.width * processing.height / 16) / 2);
 
             process_cmd.append(&mut vec_strings![
-                "-pix_fmt",
-                "yuv420p",
                 "-r",
                 &processing.fps,
                 "-c:v",
-                "mpeg2video",
-                "-g",
-                "1",
+                "h264_nvenc",
                 "-b:v",
-                &bitrate,
+                "6000k",
                 "-minrate",
-                &bitrate,
+                "6000k",
                 "-maxrate",
-                &bitrate,
+                "6000k",
                 "-bufsize",
-                &buff_size,
-                "-mpegts_flags",
-                "initial_discontinuity"
+                "3000k"
             ]);
         }
 

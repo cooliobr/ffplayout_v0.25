@@ -230,12 +230,12 @@ fn pad(aspect: f64, chain: &mut Filters, v_stream: &VideoStream, config: &Playou
                 ],
             ),
             None => format!(
-                "{}pad=max(iw\\,ih*({1}/{2})):ow/({1}/{2}):(ow-iw)/2:(oh-ih)/2",
+                "{}hwdownload,pad={}:{}:(ow-iw)/2:(oh-ih)/2:color=black,setdar=16:9,setsar=1:1,hwupload",
                 scale, config.processing.width, config.processing.height
             ),
         };
 
-        chain.add_filter(&pad, 0, Video);
+        //chain.add_filter(&pad, 0, Video);
     }
 }
 
@@ -246,7 +246,7 @@ fn fps(fps: f64, chain: &mut Filters, config: &PlayoutConfig) {
             None => format!("fps={}", config.processing.fps),
         };
 
-        chain.add_filter(&fps_filter, 0, Video);
+        //chain.add_filter(&fps_filter, 0, Video);
     }
 }
 
@@ -266,14 +266,15 @@ fn scale(
                     &[&config.processing.width, &config.processing.height],
                 ),
                 None => format!(
-                    "scale={}:{}",
-                    config.processing.width, config.processing.height
+                    "fps=30,scale_npp=format=yuv420p,scale_npp={}:{}:interp_algo=super:force_original_aspect_ratio=decrease,hwdownload,pad={}:{}:(ow-iw)/2:(oh-ih)/2:color=black,setdar=16:9,setsar=1:1",
+                    config.processing.width, config.processing.height, config.processing.width, config.processing.height
                 ),
             };
 
             chain.add_filter(&scale, 0, Video);
         } else {
-            chain.add_filter("null", 0, Video);
+            //chain.add_filter(&scale, 0, Video);
+            chain.add_filter("fps=30,scale_npp=format=yuv420p,scale_npp=1280:720:interp_algo=super:force_original_aspect_ratio=decrease,hwdownload,pad=1280:720:(ow-iw)/2:(oh-ih)/2:color=black,setdar=16:9,setsar=1:1", 0, Video);
         }
 
         if !is_close(aspect, config.processing.aspect, 0.03) {
@@ -282,7 +283,7 @@ fn scale(
                 None => format!("setdar=dar={}", config.processing.aspect),
             };
 
-            chain.add_filter(&dar, 0, Video);
+            //chain.add_filter(&dar, 0, Video);
         }
     } else {
         let scale = match config.advanced.filter.scale.clone() {
@@ -291,8 +292,8 @@ fn scale(
                 &[&config.processing.width, &config.processing.height],
             ),
             None => format!(
-                "scale={}:{}",
-                config.processing.width, config.processing.height
+                "fps=30,scale_npp=format=yuv420p,scale_npp={}:{}:interp_algo=super:force_original_aspect_ratio=decrease,hwdownload,pad={}:{}:(ow-iw)/2:(oh-ih)/2:color=black,setdar=16:9,setsar=1:1",
+                config.processing.width, config.processing.height, config.processing.width, config.processing.height
             ),
         };
         chain.add_filter(&scale, 0, Video);
@@ -302,7 +303,7 @@ fn scale(
             None => format!("setdar=dar={}", config.processing.aspect),
         };
 
-        chain.add_filter(&dar, 0, Video);
+        //chain.add_filter(&dar, 0, Video);
     }
 }
 
@@ -335,7 +336,7 @@ fn fade(
             fade_in = custom_format(&fade, &[t]);
         };
 
-        chain.add_filter(&fade_in, nr, filter_type);
+        //chain.add_filter(&fade_in, nr, filter_type);
     }
 
     if (node.out != node.duration && node.out - node.seek > 1.0) || fade_audio {
@@ -349,7 +350,7 @@ fn fade(
             fade_out = custom_format(&fade, &[node.out - node.seek - 1.0]);
         };
 
-        chain.add_filter(&fade_out, nr, filter_type);
+        //chain.add_filter(&fade_out, nr, filter_type);
     }
 }
 
@@ -366,7 +367,7 @@ fn overlay(node: &mut Media, chain: &mut Filters, config: &PlayoutConfig) {
                 .replace(':', "\\\\:"),
             config.processing.logo_opacity.to_string()]),
             None => format!(
-                "null[v];movie={}:loop=0,setpts=N/(FRAME_RATE*TB),format=rgba,colorchannelmixer=aa={}",
+                "hwupload[v];movie={}[l0];[l0]format=rgba,colorchannelmixer=aa={}",
                 config
                     .processing
                     .logo_path
@@ -379,7 +380,7 @@ fn overlay(node: &mut Media, chain: &mut Filters, config: &PlayoutConfig) {
         if node.last_ad {
             match config.advanced.filter.overlay_logo_fade_in.clone() {
                 Some(fade_in) => logo_chain.push_str(&format!(",{fade_in}")),
-                None => logo_chain.push_str(",fade=in:st=0:d=1.0:alpha=1"),
+                None => logo_chain.push_str(",null"),
             };
         }
 
@@ -390,7 +391,7 @@ fn overlay(node: &mut Media, chain: &mut Filters, config: &PlayoutConfig) {
                 Some(fade_out) => {
                     logo_chain.push_str(&custom_format(&format!(",{fade_out}"), &[length]));
                 }
-                None => logo_chain.push_str(&format!(",fade=out:st={length}:d=1.0:alpha=1")),
+                None => logo_chain.push_str(&format!(",null")),
             }
         }
 
@@ -416,7 +417,7 @@ fn overlay(node: &mut Media, chain: &mut Filters, config: &PlayoutConfig) {
                 ));
             }
             None => logo_chain.push_str(&format!(
-                "[l];[v][l]overlay={}:shortest=1",
+                ",hwupload_cuda[l];[v][l]overlay_cuda=main_w-overlay_w-{},realtime=speed=1.0004432211414036",
                 config.processing.logo_position
             )),
         };
