@@ -441,7 +441,7 @@ fn extend_video(node: &mut Media, chain: &mut Filters, config: &PlayoutConfig) {
                 None => format!("tpad=stop_mode=add:stop_duration={duration}"),
             };
 
-            chain.add_filter(&tpad, 0, Video);
+            //chain.add_filter(&tpad, 0, Video);
         }
     }
 }
