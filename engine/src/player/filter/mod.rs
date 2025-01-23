@@ -266,7 +266,7 @@ fn scale(
                     &[&config.processing.width, &config.processing.height],
                 ),
                 None => format!(
-                    "scale_npp=format=yuv420p,scale_npp={}:{}:interp_algo=super:force_original_aspect_ratio=decrease,hwdownload,pad={}:{}:(ow-iw)/2:(oh-ih)/2:color=black,setdar=16:9,setsar=1:1,hwupload",
+                    "scale_npp={}:{}:format=yuv420p:force_original_aspect_ratio=decrease,hwdownload,pad={}:{}:(ow-iw)/2:(oh-ih)/2:color=black,setdar=16:9,setsar=1:1,hwupload",
                     config.processing.width, config.processing.height, config.processing.width, config.processing.height
                 ),
             };
@@ -274,7 +274,7 @@ fn scale(
             chain.add_filter(&scale, 0, Video);
         } else {
             //chain.add_filter(&scale, 0, Video);
-            chain.add_filter("scale_npp=format=yuv420p,scale_npp=1280:720:interp_algo=super:force_original_aspect_ratio=decrease,hwdownload,pad=1280:720:(ow-iw)/2:(oh-ih)/2:color=black,setdar=16:9,setsar=1:1,hwupload", 0, Video);
+            chain.add_filter("scale_npp=1280:720:format=yuv420p:force_original_aspect_ratio=decrease,hwdownload,pad=1280:720:(ow-iw)/2:(oh-ih)/2:color=black,setdar=16:9,setsar=1:1,hwupload", 0, Video);
         }
 
         if !is_close(aspect, config.processing.aspect, 0.03) {
@@ -292,7 +292,7 @@ fn scale(
                 &[&config.processing.width, &config.processing.height],
             ),
             None => format!(
-                "scale_npp=format=yuv420p,scale_npp={}:{}:interp_algo=super:force_original_aspect_ratio=decrease,hwdownload,pad={}:{}:(ow-iw)/2:(oh-ih)/2:color=black,setdar=16:9,setsar=1:1,hwupload",
+                "scale_npp={}:{}:format=yuv420p:force_original_aspect_ratio=decrease,hwdownload,pad={}:{}:(ow-iw)/2:(oh-ih)/2:color=black,setdar=16:9,setsar=1:1,hwupload",
                 config.processing.width, config.processing.height, config.processing.width, config.processing.height
             ),
         };
@@ -489,7 +489,7 @@ fn extend_audio(node: &mut Media, chain: &mut Filters, nr: i32, config: &Playout
                     None => format!("apad=whole_dur={}", node.out - node.seek),
                 };
 
-                chain.add_filter(&apad, nr, Audio);
+                //chain.add_filter(&apad, nr, Audio);
             }
         }
     }

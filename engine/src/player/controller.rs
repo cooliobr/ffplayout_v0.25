@@ -447,3 +447,4 @@ async fn delete_old_segments<P: AsRef<Path> + Clone + std::fmt::Debug>(
 
     Ok(())
 }
+

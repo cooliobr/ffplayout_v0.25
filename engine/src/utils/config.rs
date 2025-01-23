@@ -856,11 +856,11 @@ impl PlayoutConfig {
 fn pre_audio_codec(proc_filter: &str, ingest_filter: &str, channel_count: u8) -> Vec<String> {
     let mut codec = vec_strings![
         "-c:a",
-        "s302m",
+        "aac",
         "-strict",
         "-2",
-        "-sample_fmt",
-        "s16",
+        "-b:a",
+        "328k",
         "-ar",
         "48000",
         "-ac",

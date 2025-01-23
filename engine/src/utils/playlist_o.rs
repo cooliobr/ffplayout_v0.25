@@ -50,14 +50,14 @@ pub async fn write_playlist(
             .with_extension("json");
     }
 
-    if let Some(parent) = playlist_path.parent() {
-        if let Err(e) = fs::create_dir_all(parent).await {
-            error!("Failed to create directory {parent:?}: {e}");
-            return Err(ServiceError::InternalServerError);
-        }
+    let mut file_exists = false;
+
+    if let Some(p) = playlist_path.parent() {
+        fs::create_dir_all(p).await?;
     }
 
     if playlist_path.is_file() {
+        file_exists = true;
         if let Ok(existing_data) = json_reader(&playlist_path).await {
             if json_data == existing_data {
                 return Err(ServiceError::Conflict(format!(
@@ -68,12 +68,18 @@ pub async fn write_playlist(
     }
 
     match json_writer(&playlist_path, json_data).await {
-        Ok(..) => Ok(format!("Write playlist from {date} success!")),
+        Ok(..) if file_exists => {
+            return Ok(format!("Update playlist from {date} success!"));
+        }
+        Ok(..) => {
+            return Ok(format!("Write playlist from {date} success!"));
+        }
         Err(e) => {
-            error!("Failed to write playlist {date}: {e}");
-            Err(ServiceError::InternalServerError)
+            error!("{e}");
         }
     }
+
+    Err(ServiceError::InternalServerError)
 }
 
 pub async fn generate_playlist(manager: ChannelManager) -> Result<JsonPlaylist, ServiceError> {
@@ -108,7 +114,7 @@ pub async fn generate_playlist(manager: ChannelManager) -> Result<JsonPlaylist, 
             }
         }
         Err(e) => {
-            error!("Failed to generate playlist: {e}");
+            error!("{e}");
             Err(ServiceError::InternalServerError)
         }
     }
@@ -125,10 +131,10 @@ pub async fn delete_playlist(config: &PlayoutConfig, date: &str) -> Result<Strin
         .with_extension("json");
 
     if playlist_path.is_file() {
-        match fs::remove_file(&playlist_path).await {
+        match fs::remove_file(playlist_path).await {
             Ok(..) => Ok(format!("Delete playlist from {date} success!")),
             Err(e) => {
-                error!("Failed to delete playlist {date}: {e}");
+                error!("{e}");
                 Err(ServiceError::InternalServerError)
             }
         }
@@ -136,4 +142,3 @@ pub async fn delete_playlist(config: &PlayoutConfig, date: &str) -> Result<Strin
         Ok(format!("No playlist to delete on: {date}"))
     }
 }
-

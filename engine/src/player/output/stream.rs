@@ -22,7 +22,7 @@ pub async fn output(config: &PlayoutConfig, log_format: &str) -> Child {
     media.unit = Encoder;
     media.add_filter(config, &None).await;
 
-    let mut enc_prefix = vec_strings!["-hide_banner", "-nostats", "-threads", "6", "-thread_queue_size", "512", "-hwaccel_device", "0", "-hwaccel", "cuvid", "-hwaccel_output_format", "cuda", "-v", log_format];
+    let mut enc_prefix = vec_strings!["-hide_banner", "-nostats", "-threads", "4", "-thread_queue_size", "1024", "-hwaccel_device", "0", "-hwaccel", "cuda", "-fix_sub_duration", "-drop_second_field", "true", "-hwaccel_output_format", "cuda","-resize","1280x720", "-v", log_format];
 
     if let Some(input_cmd) = &config.advanced.encoder.input_cmd {
         enc_prefix.append(&mut input_cmd.clone());
