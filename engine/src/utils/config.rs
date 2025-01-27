@@ -665,8 +665,8 @@ impl PlayoutConfig {
         } else if let Some(decoder_cmd) = &advanced.decoder.output_cmd {
             process_cmd.append(&mut decoder_cmd.clone());
         } else {
-            let bitrate = format!("{}k", processing.width * processing.height / 16);
-            let buff_size = format!("{}k", (processing.width * processing.height / 16) / 2);
+            let bitrate = format!("{}k", (processing.width * processing.height / 16) / 8);
+            let buff_size = format!("{}k", (processing.width * processing.height / 16) / 10);
 
             process_cmd.append(&mut vec_strings![
                 "-r",
