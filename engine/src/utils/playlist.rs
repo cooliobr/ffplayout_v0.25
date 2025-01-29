@@ -68,7 +68,17 @@ pub async fn write_playlist(
     }
 
     match json_writer(&playlist_path, json_data).await {
+<<<<<<< HEAD
         Ok(..) => Ok(format!("Write playlist from {date} success!")),
+=======
+        Ok(..) => {
+            return if file_exists {
+                Ok(format!("Update playlist from {date} success!"))
+            } else {
+                Ok(format!("Write playlist from {date} success!"))
+            };
+        }
+>>>>>>> c3e971ae (remove is_terminated to use only is_alive, cleanup/shorten coder, longer control throttle)
         Err(e) => {
             error!("Failed to write playlist {date}: {e}");
             Err(ServiceError::InternalServerError)
