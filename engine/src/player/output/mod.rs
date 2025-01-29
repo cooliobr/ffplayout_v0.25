@@ -93,7 +93,12 @@ async fn play(
             }
         }
 
+<<<<<<< HEAD
         let mut dec_cmd = vec_strings!["-hide_banner", "-nostats", "-threads", "4", "-thread_queue_size", "1024", "-hwaccel_device", "0", "-hwaccel", "cuda", "-fix_sub_duration", "-drop_second_field", "true", "-hwaccel_output_format", "cuda","-resize","1280x720", "-v", &ff_log_format];
+=======
+        //let mut dec_cmd = vec_strings!["-hide_banner", "-nostats", "-v", &ff_log_format];
+        let mut dec_cmd = vec_strings!["-hide_banner", "-nostats", "-threads", "6", "-thread_queue_size", "1024", "-hwaccel_device", "0", "-hwaccel", "cuda", "-fix_sub_duration", "-drop_second_field", "true", "-hwaccel_output_format", "cuda","-resize","1280x720", "-v", &ff_log_format];
+>>>>>>> 6f4c6c9c (modificado 27 janeiro)
 
         if let Some(decoder_input_cmd) = &config.advanced.decoder.input_cmd {
             dec_cmd.append(&mut decoder_input_cmd.clone());

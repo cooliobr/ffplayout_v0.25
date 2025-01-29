@@ -39,8 +39,13 @@ async fn check_media(
     config: &PlayoutConfig,
 ) -> Result<(), ProcessError> {
     let id = config.general.channel_id;
+<<<<<<< HEAD
     let mut dec_cmd = vec_strings!["-hide_banner", "-nostats", "-threads", "4", "-thread_queue_size", "1024", "-hwaccel_device", "0", "-hwaccel", "cuda","-fix_sub_duration", "-drop_second_field", "true", "-hwaccel_output_format", "cuda", "-resize","1280x720", "-v", "level+info"];
     //let mut dec_cmd = vec_strings!["-hide_banner", "-nostats", "-v", "level+info"];
+=======
+    //let mut dec_cmd = vec_strings!["-hide_banner", "-nostats", "-v", "level+info"];
+    let mut dec_cmd = vec_strings!["-hide_banner", "-nostats", "-threads", "6", "-thread_queue_size", "1024", "-hwaccel_device", "0", "-hwaccel", "cuda","-fix_sub_duration", "-drop_second_field", "true", "-hwaccel_output_format", "cuda", "-resize","1280x720", "-v", "level+info"];
+>>>>>>> 6f4c6c9c (modificado 27 janeiro)
     let mut error_list = vec![];
     let mut config = config.clone();
     config.output.mode = Null;
