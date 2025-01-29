@@ -23,11 +23,13 @@ pub async fn output(config: &PlayoutConfig, log_format: &str) -> Result<Child, S
     let id = config.general.channel_id;
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> ce5b4144 (Suas mudanças locais)
     media.unit = Encoder;
     media.add_filter(config, &None).await;
 
     let mut enc_prefix = vec_strings!["-hide_banner", "-nostats", "-threads", "4", "-thread_queue_size", "1024", "-hwaccel_device", "0", "-hwaccel", "cuda", "-fix_sub_duration", "-drop_second_field", "true", "-hwaccel_output_format", "cuda","-resize","1280x720", "-v", log_format];
-=======
     let mut enc_prefix = vec_strings!["-hide_banner", "-nostats", "-v", log_format];
 =======
     //let mut enc_prefix = vec_strings!["-hide_banner", "-nostats", "-v", log_format];
@@ -38,7 +40,6 @@ pub async fn output(config: &PlayoutConfig, log_format: &str) -> Result<Child, S
         ..Default::default()
     };
     media.add_filter(config, &None).await;
->>>>>>> c3e971ae (remove is_terminated to use only is_alive, cleanup/shorten coder, longer control throttle)
 
     if let Some(input_cmd) = &config.advanced.encoder.input_cmd {
         enc_prefix.append(&mut input_cmd.clone());
