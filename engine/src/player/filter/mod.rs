@@ -267,20 +267,13 @@ fn scale(
                 ),
                 None => format!(
                     "scale_npp={}:{}:format=yuv420p:force_original_aspect_ratio=decrease,hwdownload,pad={}:{}:(ow-iw)/2:(oh-ih)/2:color=black,setdar=16:9,setsar=1:1,hwupload",
-<<<<<<< HEAD
                     config.processing.width, config.processing.height, config.processing.width, config.processing.height
-=======
-                    config.processing.width, config.processing.height, config.processing.width, config.processing.height                    
->>>>>>> 6f4c6c9c (modificado 27 janeiro)
                 ),
             };
 
             chain.add_filter(&scale, 0, Video);
         } else {
-<<<<<<< HEAD
             //chain.add_filter(&scale, 0, Video);
-=======
->>>>>>> 6f4c6c9c (modificado 27 janeiro)
             chain.add_filter("scale_npp=1280:720:format=yuv420p:force_original_aspect_ratio=decrease,hwdownload,pad=1280:720:(ow-iw)/2:(oh-ih)/2:color=black,setdar=16:9,setsar=1:1,hwupload", 0, Video);
         }
 
@@ -300,11 +293,7 @@ fn scale(
             ),
             None => format!(
                 "scale_npp={}:{}:format=yuv420p:force_original_aspect_ratio=decrease,hwdownload,pad={}:{}:(ow-iw)/2:(oh-ih)/2:color=black,setdar=16:9,setsar=1:1,hwupload",
-<<<<<<< HEAD
                 config.processing.width, config.processing.height, config.processing.width, config.processing.height
-=======
-                config.processing.width, config.processing.height, config.processing.width, config.processing.height                
->>>>>>> 6f4c6c9c (modificado 27 janeiro)
             ),
         };
         chain.add_filter(&scale, 0, Video);
@@ -314,11 +303,7 @@ fn scale(
             None => format!("setdar=dar={}", config.processing.aspect),
         };
 
-<<<<<<< HEAD
         //chain.add_filter(&dar, 0, Video);
-=======
-       // chain.add_filter(&dar, 0, Video);
->>>>>>> 6f4c6c9c (modificado 27 janeiro)
     }
 }
 
